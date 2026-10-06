@@ -1,3 +1,8 @@
+# 1. Принудительно создаем структуру папок
+New-Item -ItemType Directory -Path ".github\workflows" -Force
+
+# 2. Записываем универсальный отладочный workflow
+@'
 name: Run Automated Tests
 
 on:
@@ -34,13 +39,10 @@ jobs:
     - name: Поиск и запуск pytest
       run: |
         echo "=== ЗАПУСК ТЕСТОВ ==="
-        # Ищем все файлы test_*.py и запускаем pytest в папке, где они найдены
         TEST_DIR=$(find . -name "test_*.py" -exec dirname {} \; | head -n 1)
-        
         if [ -z "$TEST_DIR" ]; then
-          echo "ОШИБКА: Ни один файл test_*.py не найден в репозитории!"
+          echo "ОШИБКА: Ни один файл test_*.py не найден!"
           exit 1
         fi
-
-        echo "Тесты найдены в директории: $TEST_DIR"
         pytest -v "$TEST_DIR"
+'@ | Out-File -FilePath ".github\workflows\run-tests.yml" -Encoding utf8
