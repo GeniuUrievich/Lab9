@@ -19,12 +19,15 @@ jobs:
       with:
         python-version: '3.11'
         cache: 'pip'
+        cache-dependency-path: 'Lab9/requirements.txt'
 
     - name: Установка зависимостей
+      working-directory: ./Lab9
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
     - name: Запуск тестов через pytest
+      working-directory: ./Lab9
       run: |
         pytest -v
